@@ -1,0 +1,109 @@
+@import '~antd/lib/style/themes/default.less';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.globalSpin {
+  width: 100%;
+  margin: 40px 0 !important;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+@media (max-width: @screen-xs) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+// custom styles for ant-design
+:global {
+  .ant-layout {
+    min-height: 100%;
+  }
+
+  .ant-spin-container {
+    overflow: visible !important;
+  }
+
+  .ant-table-pagination {
+    display: table;
+    float: none !important;
+    margin: 16px auto !important;
+  }
+
+  .ant-list-pagination {
+    display: table;
+    float: none !important;
+    margin: 16px auto !important;
+  }
+
+  .ant-pagination-total-text {
+    position: absolute;
+    left: 0;
+  }
+
+  .ant-pagination-options {
+    position: absolute;
+    right: 0;
+  }
+
+  .ant-notification-notice-message-single-line-auto-margin {
+    height: 0;
+  }
+  .tableListPage {
+    .tableSearchForm {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tableListOperator {
+      margin: 16px 0;
+      button {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+:global(td .ant-tag.ant-tag-blue, td .ant-tag) {
+  margin-top: 8px;
+}
+:global(td .ant-tag) {
+  margin-top: 8px;
+}
