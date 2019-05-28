@@ -17,7 +17,9 @@ export default {
       const response = yield call(fakeAccountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
+        payload: {
+          currentAuthority: 'admin',
+        },
       });
       // Login successfully
       if (response.status === 'ok') {

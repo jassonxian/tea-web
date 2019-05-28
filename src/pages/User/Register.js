@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
+import lodash from 'lodash';
 import router from 'umi/router';
-import { Form, Input, Button, Modal, Select, Row, Col, Popover, Progress } from 'antd';
+import { Form, Input, Button, Select, Popover, Progress } from 'antd';
 import styles from './Register.less';
 
 const FormItem = Form.Item;
@@ -41,7 +42,6 @@ const passwordProgressMap = {
 @Form.create()
 class Register extends Component {
   state = {
-    count: 0,
     confirmDirty: false,
     visible: false,
     help: '',
@@ -65,21 +65,6 @@ class Register extends Component {
     clearInterval(this.interval);
   }
 
-  onGetCaptcha = () => {
-    let count = 59;
-    this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
-      }
-    }, 1000);
-    Modal.info({
-      title: formatMessage({ id: 'app.login.verification-code-warning' }),
-    });
-  };
-
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -97,12 +82,12 @@ class Register extends Component {
     const { form, dispatch } = this.props;
     form.validateFields({ force: true }, (err, values) => {
       if (!err) {
-        const { prefix } = this.state;
+        const cache = lodash.cloneDeep(values);
+        delete cache.confirm;
         dispatch({
           type: 'register/submit',
           payload: {
             ...values,
-            prefix,
           },
         });
       }
@@ -179,7 +164,7 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible } = this.state;
+    const { prefix, help, visible } = this.state;
     return (
       <div className={styles.main}>
         <h3>
@@ -187,19 +172,33 @@ class Register extends Component {
         </h3>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('mail', {
+            {getFieldDecorator('agent_name', {
               rules: [
                 {
                   required: true,
-                  message: formatMessage({ id: 'validation.email.required' }),
-                },
-                {
-                  type: 'email',
-                  message: formatMessage({ id: 'validation.email.wrong-format' }),
+                  message: formatMessage({ id: 'validation.agent_name.required' }),
                 },
               ],
             })(
-              <Input size="large" placeholder={formatMessage({ id: 'form.email.placeholder' })} />
+              <Input
+                size="large"
+                placeholder={formatMessage({ id: 'form.agent_name.placeholder' })}
+              />
+            )}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('username', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.username.required' }),
+                },
+              ],
+            })(
+              <Input
+                size="large"
+                placeholder={formatMessage({ id: 'form.username.placeholder' })}
+              />
             )}
           </FormItem>
           <FormItem help={help}>
@@ -263,7 +262,7 @@ class Register extends Component {
                 <Option value="86">+86</Option>
                 <Option value="87">+87</Option>
               </Select>
-              {getFieldDecorator('mobile', {
+              {getFieldDecorator('phone', {
                 rules: [
                   {
                     required: true,
@@ -282,37 +281,6 @@ class Register extends Component {
                 />
               )}
             </InputGroup>
-          </FormItem>
-          <FormItem>
-            <Row gutter={8}>
-              <Col span={16}>
-                {getFieldDecorator('captcha', {
-                  rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'validation.verification-code.required' }),
-                    },
-                  ],
-                })(
-                  <Input
-                    size="large"
-                    placeholder={formatMessage({ id: 'form.verification-code.placeholder' })}
-                  />
-                )}
-              </Col>
-              <Col span={8}>
-                <Button
-                  size="large"
-                  disabled={count}
-                  className={styles.getCaptcha}
-                  onClick={this.onGetCaptcha}
-                >
-                  {count
-                    ? `${count} s`
-                    : formatMessage({ id: 'app.register.get-verification-code' })}
-                </Button>
-              </Col>
-            </Row>
           </FormItem>
           <FormItem>
             <Button

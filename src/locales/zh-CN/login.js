@@ -37,4 +37,7 @@ export default {
   'validation.date.required': '请选择起止日期',
   'validation.goal.required': '请输入目标描述',
   'validation.standard.required': '请输入衡量标准',
+  // my
+  'validation.agent_name.required': '请输入代理商名称！',
+  'validation.username.required': '请输入用户名称！',
 };

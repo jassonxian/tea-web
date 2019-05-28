@@ -56,8 +56,14 @@ export default [
             path: '/tags/classify',
             name: 'classify',
             component: './Tags/Classify',
-          }
-        ]
+          },
+        ],
+      },
+      {
+        path: '/agent',
+        icon: 'form',
+        name: 'agent',
+        component: './Agent',
       },
       // forms
       {

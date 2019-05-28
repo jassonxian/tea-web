@@ -104,14 +104,14 @@ export async function updateFakeList(params) {
 }
 
 export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
+  return request('/api/agent/login', {
     method: 'POST',
     data: params,
   });
 }
 
 export async function fakeRegister(params) {
-  return request('/api/register', {
+  return request('/api/agent', {
     method: 'POST',
     data: params,
   });

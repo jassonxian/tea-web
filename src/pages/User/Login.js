@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
-import { Checkbox, Alert, Modal, Icon } from 'antd';
+import { Alert, Modal } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
 
@@ -15,7 +15,6 @@ const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 class LoginPage extends Component {
   state = {
     type: 'account',
-    autoLogin: true,
   };
 
   onTabChange = type => {
@@ -57,19 +56,13 @@ class LoginPage extends Component {
     }
   };
 
-  changeAutoLogin = e => {
-    this.setState({
-      autoLogin: e.target.checked,
-    });
-  };
-
   renderMessage = content => (
     <Alert style={{ marginBottom: 24 }} message={content} type="error" showIcon />
   );
 
   render() {
     const { login, submitting } = this.props;
-    const { type, autoLogin } = this.state;
+    const { type } = this.state;
     return (
       <div className={styles.main}>
         <Login
@@ -86,7 +79,7 @@ class LoginPage extends Component {
               !submitting &&
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
             <UserName
-              name="userName"
+              name="username"
               placeholder={`${formatMessage({ id: 'app.login.userName' })}: admin or user`}
               rules={[
                 {
@@ -147,9 +140,9 @@ class LoginPage extends Component {
             />
           </Tab>
           <div>
-            <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
-              <FormattedMessage id="app.login.remember-me" />
-            </Checkbox>
+            <Link className={styles.register} to="/user/register">
+              <FormattedMessage id="app.login.signup" />
+            </Link>
             <a style={{ float: 'right' }} href="">
               <FormattedMessage id="app.login.forgot-password" />
             </a>
@@ -157,15 +150,6 @@ class LoginPage extends Component {
           <Submit loading={submitting}>
             <FormattedMessage id="app.login.login" />
           </Submit>
-          <div className={styles.other}>
-            <FormattedMessage id="app.login.sign-in-with" />
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
-            <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="app.login.signup" />
-            </Link>
-          </div>
         </Login>
       </div>
     );

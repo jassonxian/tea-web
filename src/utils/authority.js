@@ -23,3 +23,50 @@ export function setAuthority(authority) {
   const proAuthority = typeof authority === 'string' ? [authority] : authority;
   return localStorage.setItem('antd-pro-authority', JSON.stringify(proAuthority));
 }
+
+export function getLogged() {
+  const authority = localStorage.getItem(`logged`) || false;
+  return JSON.parse(authority);
+}
+
+export function setLogged(authority) {
+  return localStorage.setItem(`logged`, authority || false);
+}
+
+export function isLogged() {
+  return getLogged();
+}
+
+export function isActionsAllowable(targets) {
+  if (!isLogged()) return false;
+
+  const currentAuthority = getAuthority();
+
+  // Flat all the allowable actions from currentAuthority
+  const allowableActions = [];
+  Object.keys(currentAuthority).forEach(key => {
+    currentAuthority[key].forEach(action => {
+      allowableActions.push(action);
+    });
+  });
+
+  // Handle String type actions
+  if (typeof targets === 'string') {
+    if (allowableActions.indexOf('*') >= 0) return true;
+    return allowableActions.indexOf(targets) >= 0;
+  }
+
+  // Handle Array type actions
+  if (Array.isArray(targets)) {
+    const allowableStatus = {};
+    targets.forEach(action => {
+      if (allowableActions.indexOf('*') >= 0) {
+        allowableStatus[action] = true;
+      } else {
+        allowableStatus[action] = allowableActions.indexOf(action) >= 0;
+      }
+    });
+    return allowableStatus;
+  }
+  return false;
+}
