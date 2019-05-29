@@ -111,7 +111,7 @@ export async function fakeAccountLogin(params) {
 }
 
 export async function fakeRegister(params) {
-  return request('/api/agent', {
+  return request('/api/register/agent', {
     method: 'POST',
     data: params,
   });

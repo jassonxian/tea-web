@@ -5,7 +5,7 @@ export async function fetch() {
 }
 
 export async function create(params) {
-  return request('/api/agent', {
+  return request('/api/register/agent', {
     method: 'POST',
     data: params,
   });
@@ -26,8 +26,8 @@ export async function update(params) {
 }
 
 export async function activate(params) {
-  return request('/api/agent', {
-    method: 'POST',
+  return request('/api/agent/activate', {
+    method: 'PATCH',
     data: params,
   });
 }

@@ -8,7 +8,7 @@ import Search from './components/Search';
 import List from './components/List';
 import Modal from './components/Modal';
 
-const Users = ({ location, dispatch, users, fetching, global }) => {
+const Agent = ({ location, dispatch, agent, fetching }) => {
   const {
     list,
     pagination,
@@ -17,15 +17,9 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
     modalVisible,
     modalType,
     currentItem,
-    roleType,
     roleSelection,
-    customerSelection,
     unitSelection,
-    submitting,
-  } = users;
-  const {
-    currentUser: { role_group },
-  } = global;
+  } = agent;
 
   const searchProps = {
     unitSelection,
@@ -41,7 +35,6 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
 
   const listProps = {
     isActionsAllowable,
-    role_group,
     list,
     loading: fetching,
     pagination,
@@ -49,27 +42,15 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
     handleChange(query) {
       handleRefresh(dispatch, location, { type: 'list', query });
     },
-    onUpdate(item) {
-      dispatch({
-        type: 'users/onUpdate',
-        payload: item,
-      });
-    },
     activate(value) {
       dispatch({
-        type: 'users/activate',
+        type: 'agent/activate',
         payload: value,
       });
     },
     remove(value) {
       dispatch({
-        type: 'users/remove',
-        payload: value,
-      });
-    },
-    reset(value) {
-      dispatch({
-        type: 'users/reset',
+        type: 'agent/remove',
         payload: value,
       });
     },
@@ -77,28 +58,17 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
   const modalProps = {
     type: modalType,
     visible: modalVisible,
-    title: `${modalType === 'create' ? '新建用户' : '编辑用户'}`,
+    title: `${modalType === 'create' ? '新建代理商' : '编辑用户'}`,
     currentItem: modalType === 'create' ? {} : currentItem,
-    roleType,
-    confirmLoading: submitting,
-    roleSelection,
-    customerSelection,
-    unitSelection,
-    onRoleChange(value) {
-      dispatch({
-        type: 'users/updateState',
-        payload: { roleType: value },
-      });
-    },
     onOk(values) {
       dispatch({
-        type: `users/${modalType}`,
+        type: `agent/${modalType}`,
         payload: values,
       });
     },
     onCancel() {
       dispatch({
-        type: 'users/updateState',
+        type: 'agent/updateState',
         payload: {
           modalVisible: false,
         },
@@ -106,7 +76,7 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
     },
   };
   const onCreate = () => {
-    dispatch({ type: 'users/onCreate' });
+    dispatch({ type: 'agent/onCreate' });
   };
   return (
     <PageHeaderWrapper title="用户管理">
@@ -116,7 +86,7 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
             <Search {...searchProps} />
           </div>
           <div className="tableListOperator">
-            {isActionsAllowable('create-user') && (
+            {isActionsAllowable('admin') && (
               <Button icon="plus" type="primary" onClick={onCreate}>
                 新建
               </Button>
@@ -130,10 +100,10 @@ const Users = ({ location, dispatch, users, fetching, global }) => {
   );
 };
 
-const mapStateToProps = ({ users, loading, global }) => ({
-  users,
+const mapStateToProps = ({ agent, loading, global }) => ({
+  agent,
   global,
-  fetching: loading.effects['users/fetch'],
+  fetching: loading.effects['agent/fetch'],
 });
 
-export default connect(mapStateToProps)(Users);
+export default connect(mapStateToProps)(Agent);

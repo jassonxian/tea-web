@@ -1,8 +1,8 @@
 import enhancedModelExtend, { basicList, refreshable } from '@/utils/extend';
-import { fetchReport, removeReport, createReport } from '@/services/tags';
+import { fetchCategory, removeCategory, createCategory } from '@/services/tags';
 
 export default enhancedModelExtend([basicList, refreshable], {
-  namespace: 'reporttags',
+  namespace: 'category',
   state: {
     modalVisible: false,
     submitting: false,
@@ -10,15 +10,15 @@ export default enhancedModelExtend([basicList, refreshable], {
 
   effects: {
     *fetch(_, { call, put }) {
-      // const data = yield call(fetchReport);
-      // if (data.status) {
-      //   yield put({
-      //     type: 'updateState',
-      //     payload: {
-      //       list: data.data.records,
-      //     },
-      //   });
-      // }
+      const data = yield call(fetchCategory);
+      if (data.status) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            list: data.data.records,
+          },
+        });
+      }
     },
     *onCreate(_, { put }) {
       yield put({
@@ -33,7 +33,7 @@ export default enhancedModelExtend([basicList, refreshable], {
         type: 'updateState',
         payload: { submitting: true },
       });
-      const data = yield call(createReport, payload);
+      const data = yield call(createCategory, payload);
       yield put({
         type: 'updateState',
         payload: { submitting: false },
@@ -52,7 +52,7 @@ export default enhancedModelExtend([basicList, refreshable], {
       }
     },
     *remove({ payload }, { call, put }) {
-      const data = yield call(removeReport, payload);
+      const data = yield call(removeCategory, payload);
       if (data.status) {
         yield put({
           type: 'refreshPage',
@@ -67,7 +67,7 @@ export default enhancedModelExtend([basicList, refreshable], {
     setup({ dispatch, history }) {
       history.listen(location => {
         const { pathname } = location;
-        if (pathname === '/tags/classify') {
+        if (pathname === '/tags/category') {
           dispatch({ type: 'fetch' });
         }
       });

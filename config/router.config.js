@@ -53,9 +53,14 @@ export default [
         name: 'tags',
         routes: [
           {
-            path: '/tags/classify',
-            name: 'classify',
-            component: './Tags/Classify',
+            path: '/tags/category',
+            name: 'category',
+            component: './Tags/Category',
+          },
+          {
+            path: '/tags/brand',
+            name: 'brand',
+            component: './Tags/Brand',
           },
         ],
       },

@@ -18,7 +18,7 @@ export default {
       yield put({
         type: 'changeLoginStatus',
         payload: {
-          currentAuthority: 'admin',
+          currentAuthority: response.data.username,
         },
       });
       // Login successfully

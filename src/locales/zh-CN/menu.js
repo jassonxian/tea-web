@@ -1,6 +1,8 @@
 export default {
   'menu.tags': '标签管理',
-  'menu.tags.classify': '分类标签管理',
+  'menu.agent': '代理商管理',
+  'menu.tags.category': '分类标签管理',
+  'menu.tags.brand': '品牌标签管理',
   'menu.home': '首页',
   'menu.login': '登录',
   'menu.register': '注册',

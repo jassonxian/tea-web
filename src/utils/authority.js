@@ -38,21 +38,11 @@ export function isLogged() {
 }
 
 export function isActionsAllowable(targets) {
-  if (!isLogged()) return false;
-
-  const currentAuthority = getAuthority();
-
-  // Flat all the allowable actions from currentAuthority
-  const allowableActions = [];
-  Object.keys(currentAuthority).forEach(key => {
-    currentAuthority[key].forEach(action => {
-      allowableActions.push(action);
-    });
-  });
+  const allowableActions = getAuthority();
+  console.log(targets);
 
   // Handle String type actions
   if (typeof targets === 'string') {
-    if (allowableActions.indexOf('*') >= 0) return true;
     return allowableActions.indexOf(targets) >= 0;
   }
 

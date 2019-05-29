@@ -2,10 +2,9 @@ const USER_RULES = {
   username: [
     {
       required: true,
-      pattern: /^(?!_)(?!.*?_$)[a-zA-Z0-9_]{2,30}$/,
       min: 2,
       max: 30,
-      message: '请按要求输入用户名',
+      message: '请输入2-30个字符',
     },
   ],
   password: [
@@ -67,16 +66,16 @@ const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 4 },
-    lg: { span: 4 },
-    xl: { span: 4 },
+    md: { span: 6 },
+    lg: { span: 6 },
+    xl: { span: 6 },
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 24 },
-    md: { span: 19 },
-    lg: { span: 19 },
-    xl: { span: 19 },
+    md: { span: 18 },
+    lg: { span: 18 },
+    xl: { span: 18 },
   },
 };
 

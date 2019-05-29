@@ -15,10 +15,11 @@ export default {
   'app.login.verification-code-warning':
     '此项目为演示项目，并不会真的给您发送验证码。请切换到账户密码登录界面按提示登录。',
   'app.register.sign-in': '使用已有账户登录',
-  'app.register-result.msg': '你的账户：{email} 注册成功',
+  'app.register-result.msg': '你的账户：{email} 注册成功，请联系管理员进行激活',
   'app.register-result.activation-email':
     '激活邮件已发送到你的邮箱中，邮件有效期为24小时。请及时登录邮箱，点击邮件中的链接激活帐户。',
   'app.register-result.back-home': '返回首页',
+  'app.register-result.back-login': '去登录',
   'app.register-result.view-mailbox': '查看邮箱',
   'validation.email.required': '请输入邮箱地址！',
   'validation.email.wrong-format': '邮箱地址格式错误！',

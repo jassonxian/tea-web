@@ -5,10 +5,10 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { isActionsAllowable } from '@/utils/authority';
 import Modal from './components/Modal';
 
-const Tags = ({ dispatch, reporttags }) => {
-  const { modalVisible, submitting, list } = reporttags;
+const Tags = ({ dispatch, category }) => {
+  const { modalVisible, submitting, list } = category;
   const onCreate = () => {
-    dispatch({ type: 'reporttags/onCreate' });
+    dispatch({ type: 'category/onCreate' });
   };
   const modalProps = {
     currentItem: {},
@@ -18,19 +18,19 @@ const Tags = ({ dispatch, reporttags }) => {
     confirmLoading: submitting,
     onOk(values) {
       dispatch({
-        type: 'reporttags/updateState',
+        type: 'category/updateState',
         payload: {
           submitting: true,
         },
       });
       dispatch({
-        type: `reporttags/create`,
+        type: `category/create`,
         payload: values,
       });
     },
     onCancel() {
       dispatch({
-        type: 'reporttags/updateState',
+        type: 'category/updateState',
         payload: {
           modalVisible: false,
         },
@@ -40,7 +40,7 @@ const Tags = ({ dispatch, reporttags }) => {
   const onClose = (e, id) => {
     e.preventDefault();
     dispatch({
-      type: 'reporttags/remove',
+      type: 'category/remove',
       payload: {
         report_tag_id: id,
       },
@@ -80,10 +80,10 @@ const Tags = ({ dispatch, reporttags }) => {
   );
 };
 
-const mapStateToProps = ({ reporttags, loading, global }) => ({
-  reporttags,
+const mapStateToProps = ({ category, loading, global }) => ({
+  category,
   global,
-  fetching: loading.effects['reporttags/fetch'],
+  fetching: loading.effects['category/fetch'],
 });
 
 export default connect(mapStateToProps)(Tags);
