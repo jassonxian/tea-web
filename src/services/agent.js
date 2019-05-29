@@ -1,7 +1,9 @@
 import request from '@/utils/request';
 
 export async function fetch() {
-  return request('/api/agent');
+  return request('/api/agent', {
+    method: 'GET',
+  });
 }
 
 export async function create(params) {

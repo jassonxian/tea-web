@@ -42,7 +42,7 @@ const Tags = ({ dispatch, category }) => {
     dispatch({
       type: 'category/remove',
       payload: {
-        report_tag_id: id,
+        category_id: id,
       },
     });
   };
@@ -53,11 +53,11 @@ const Tags = ({ dispatch, category }) => {
     return list.map(item => {
       return (
         <Tag
-          key={item.id}
-          closable={isActionsAllowable('remove-tag-report')}
-          onClose={e => onClose(e, item.id)}
+          key={item.category_id}
+          closable={isActionsAllowable('admin')}
+          onClose={e => onClose(e, item.category_id)}
         >
-          {item.name}
+          {item.category_name}
         </Tag>
       );
     });

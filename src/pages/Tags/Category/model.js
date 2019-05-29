@@ -11,7 +11,7 @@ export default enhancedModelExtend([basicList, refreshable], {
   effects: {
     *fetch(_, { call, put }) {
       const data = yield call(fetchCategory);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {
@@ -38,7 +38,7 @@ export default enhancedModelExtend([basicList, refreshable], {
         type: 'updateState',
         payload: { submitting: false },
       });
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {
@@ -53,7 +53,7 @@ export default enhancedModelExtend([basicList, refreshable], {
     },
     *remove({ payload }, { call, put }) {
       const data = yield call(removeCategory, payload);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'refreshPage',
           next: 'fetch',

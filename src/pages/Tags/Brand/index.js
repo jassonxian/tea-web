@@ -8,7 +8,7 @@ import Modal from './components/Modal';
 const Tags = ({ dispatch, brand }) => {
   const { modalVisible, submitting, list } = brand;
   const onCreate = () => {
-    dispatch({ type: 'reporttags/onCreate' });
+    dispatch({ type: 'brand/onCreate' });
   };
   const modalProps = {
     currentItem: {},
@@ -42,7 +42,7 @@ const Tags = ({ dispatch, brand }) => {
     dispatch({
       type: 'brand/remove',
       payload: {
-        report_tag_id: id,
+        brand_id: id,
       },
     });
   };
@@ -53,11 +53,11 @@ const Tags = ({ dispatch, brand }) => {
     return list.map(item => {
       return (
         <Tag
-          key={item.id}
-          closable={isActionsAllowable('remove-tag-report')}
-          onClose={e => onClose(e, item.id)}
+          key={item.brand_id}
+          closable={isActionsAllowable('admin')}
+          onClose={e => onClose(e, item.brand_id)}
         >
-          {item.name}
+          {item.brand_name}
         </Tag>
       );
     });
@@ -80,9 +80,8 @@ const Tags = ({ dispatch, brand }) => {
   );
 };
 
-const mapStateToProps = ({ brand, loading, global }) => ({
+const mapStateToProps = ({ brand, loading }) => ({
   brand,
-  global,
   fetching: loading.effects['brand/fetch'],
 });
 

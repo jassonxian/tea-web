@@ -7,7 +7,7 @@ const Modal = props => {
     {
       type: 'textarea',
       label: '标签名称',
-      name: 'tag_name_list',
+      name: 'brand_name',
       inputProps: {
         rows: 3,
         style: { minHeight: 32 },

@@ -11,7 +11,7 @@ export default enhancedModelExtend([basicList, refreshable], {
   effects: {
     *fetch(_, { call, put }) {
       const data = yield call(fetchBrand);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {
@@ -53,6 +53,7 @@ export default enhancedModelExtend([basicList, refreshable], {
     },
     *remove({ payload }, { call, put }) {
       const data = yield call(removeBrand, payload);
+      console.log(data);
       if (data.status) {
         yield put({
           type: 'refreshPage',
