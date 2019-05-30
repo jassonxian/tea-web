@@ -28,7 +28,6 @@ const codeMessage = {
  * 异常处理程序
  */
 const errorHandler = error => {
-  console.log(error);
   const { response = {} } = error;
   const errortext = codeMessage[response.status] || response.statusText;
   const { status, url } = response;
@@ -59,7 +58,9 @@ const errorHandler = error => {
   }
   if (status >= 404 && status < 422) {
     router.push('/exception/404');
+    return;
   }
+  return response.clone().json();
 };
 
 /**
@@ -70,17 +71,4 @@ const request = extend({
   credentials: 'include', // 默认请求是否带上cookie
 });
 
-// request.interceptors.response.use((response) => {
-//   const codeMaps = {
-//     502: '网关错误。',
-//     503: '服务不可用，服务器暂时过载或维护。',
-//     504: '网关超时。',
-//   };
-//   console.log(response);
-//   if (response.status === 204) {``
-//     console.log(response.json())
-//   }
-//   message.error(codeMaps[response.status]);
-//   return response;
-// });
 export default request;

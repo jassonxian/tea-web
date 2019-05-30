@@ -52,13 +52,11 @@ export default enhancedModelExtend([basicList, refreshable], {
       }
     },
     *remove({ payload }, { call, put }) {
-      const data = yield call(removeCategory, payload);
-      if (data.status === 'ok') {
-        yield put({
-          type: 'refreshPage',
-          next: 'fetch',
-        });
-      }
+      yield call(removeCategory, payload);
+      yield put({
+        type: 'refreshPage',
+        next: 'fetch',
+      });
     },
   },
 

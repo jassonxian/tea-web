@@ -28,6 +28,7 @@ module.exports = {
       },
     ],
     camelcase: 0,
+    'consistent-return': 0,
     'no-plusplus': 0,
     'import/no-cycle': 0,
     'jsx-a11y/no-noninteractive-element-interactions': 0,
