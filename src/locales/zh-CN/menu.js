@@ -3,6 +3,7 @@ export default {
   'menu.agent': '代理商管理',
   'menu.tags.category': '分类标签管理',
   'menu.tags.brand': '品牌标签管理',
+  'menu.goods': '商品管理',
   'menu.home': '首页',
   'menu.login': '登录',
   'menu.register': '注册',

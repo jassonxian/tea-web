@@ -28,6 +28,8 @@ module.exports = {
       },
     ],
     camelcase: 0,
+    'no-param-reassign': 0,
+    'react/destructuring-assignment': 0,
     'consistent-return': 0,
     'no-plusplus': 0,
     'import/no-cycle': 0,

@@ -70,6 +70,21 @@ export default [
         name: 'agent',
         component: './Agent',
       },
+      {
+        path: '/goods',
+        icon: 'form',
+        name: 'goods',
+        routes: [
+          {
+            path: '/goods',
+            component: './Goods/Index',
+          },
+          {
+            path: '/goods/create',
+            component: './Goods/Create',
+          },
+        ],
+      },
       // forms
       {
         path: '/form',
