@@ -81,8 +81,8 @@ export default enhancedModelExtend(common, {
     setup({ history, dispatch }) {
       return history.listen(({ pathname }) => {
         if (pathname === '/goods/create') {
-          dispatch({ type: 'fetchUnits' });
-          dispatch({ type: 'fetchTag' });
+          dispatch({ type: 'fetchBrand' });
+          dispatch({ type: 'fetchCategory' });
         }
       });
     },

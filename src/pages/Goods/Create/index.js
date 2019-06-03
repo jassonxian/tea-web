@@ -15,21 +15,26 @@ import {
   Upload,
   notification,
   Modal,
+  Divider,
+  InputNumber,
 } from 'antd';
 import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { momentToString } from '@/components/_utils/timeTools';
-import { EDITOR_RULES } from './const';
+import EDITOR_RULES from './const';
 import styles from './index.less';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const fieldLabels = {
-  title: '报告名称',
-  unit_ids: '接收单位',
-  report_tag_id: '报告类型',
-  report_content: '报告概述',
+  goods_name: '商品名称',
+  category_id: '商品类别',
+  brand_id: '商品品牌',
+  count: '商品总数',
+  freight: '邮费',
+  price: '商品价格',
+  explain: '商品概述',
 };
 
 function getBase64(file) {
@@ -46,14 +51,8 @@ class Index extends React.Component {
     width: '100%',
     previewVisible: false,
     previewImage: '',
-    fileList: [
-      {
-        uid: '-1',
-        name: 'xxx.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      },
-    ],
+    fileListGoods: [],
+    fileListTemplate: [],
   };
 
   componentDidMount() {
@@ -78,8 +77,9 @@ class Index extends React.Component {
     });
   };
 
-  handleChange = ({ fileList }) => this.setState({ fileList });
-  // *********
+  handleChangeGoods = ({ fileList }) => this.setState({ fileListGoods: fileList });
+
+  handleChangeTemplate = ({ fileList }) => this.setState({ fileListTemplate: fileList });
 
   resizeFooterToolbar = () => {
     const sider = document.querySelectorAll('.ant-layout-sider')[0];
@@ -89,26 +89,11 @@ class Index extends React.Component {
     }
   };
 
-  handleOnChange = ({ file, fileList }) => {
-    if (file.status === 'error') {
-      notification.error({
-        message: (file.response && file.response.error && file.response.error.msg) || '未知错误',
-      });
-    }
-    return fileList.map(item => ({
-      status: item.status,
-      name: item.name,
-      uid: item.uid,
-      url: item.url || null,
-      filePath: item.response && item.response.data ? item.response.data[0] : item.filePath,
-    }));
-  };
-
   render() {
     const { form, dispatch, submitting, creategoods } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { item = {}, categoryData, brandData } = creategoods;
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { previewVisible, previewImage, fileListGoods, fileListTemplate } = this.state;
 
     const uploadButton = (
       <div>
@@ -139,11 +124,16 @@ class Index extends React.Component {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           const modifiedValues = lodash.cloneDeep(values);
-          modifiedValues.report_path = values.report_path
-            .map(file => {
-              return [file.filePath, file.name];
-            })
-            .filter(file => file[0] !== undefined);
+          modifiedValues.goods_picture = [
+            modifiedValues.goods_picture.fileList.map(file => {
+              return file.response.data;
+            }),
+          ];
+          modifiedValues.template_picture = [
+            modifiedValues.template_picture.fileList.map(file => {
+              return file.response.data;
+            }),
+          ];
           dispatch({
             type: 'creategoods/create',
             payload: cleanSearchData(modifiedValues),
@@ -190,23 +180,42 @@ class Index extends React.Component {
         </span>
       );
     };
-    const uploadProps = {
-      action: '/api/report/upload/attachment',
+    const uploadPropsGoods = {
+      action: '/api/goods/upload/attachment',
+      listType: 'picture-card',
+      onPreview: this.handlePreview,
+      fileList: fileListGoods,
+      onChange: this.handleChangeGoods,
       beforeUpload(file) {
         return new Promise((resolve, reject) => {
-          const type = [
-            'txt',
-            'doc',
-            'docx',
-            'xlsx',
-            'xls',
-            'ppt',
-            'pptx',
-            'zip',
-            'tar',
-            'gz',
-            'pdf',
-          ];
+          const type = ['jpg', 'jpeg', 'png'];
+          if (file.size / 1024 >= 20480) {
+            notification.error({
+              message: '文件过大',
+              description: '请上传小于20MB的文件',
+            });
+            reject(file);
+          } else if (!type.includes(file.name.split('.').pop())) {
+            notification.error({
+              message: '文件格式有误',
+              description: '请上传正确格式的文件',
+            });
+            reject(file);
+          } else {
+            resolve(file);
+          }
+        });
+      },
+    };
+    const uploadPropsTemplate = {
+      action: '/api/goods/upload/attachment',
+      listType: 'picture-card',
+      onPreview: this.handlePreview,
+      fileList: fileListTemplate,
+      onChange: this.handleChangeTemplate,
+      beforeUpload(file) {
+        return new Promise((resolve, reject) => {
+          const type = ['jpg', 'jpeg', 'png'];
           if (file.size / 1024 >= 20480) {
             notification.error({
               message: '文件过大',
@@ -231,41 +240,15 @@ class Index extends React.Component {
           <Form layout="vertical" hideRequiredMark>
             <Row gutter={16}>
               <Col lg={8} md={12} sm={24}>
-                <Form.Item label={fieldLabels.title}>
-                  {getFieldDecorator('title', {
-                    initialValue: item.title,
-                    rules: EDITOR_RULES.title,
-                  })(<Input placeholder="请输入商品名称" />)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col lg={8} md={12} sm={24}>
-                <Form.Item label={fieldLabels.unit_ids}>
-                  {getFieldDecorator('unit_ids', {
-                    initialValue: item.unit_ids,
-                    rules: EDITOR_RULES.unit_ids,
-                  })(
-                    <Select mode="multiple" placeholder="请选择商品品牌">
-                      {brandData.map(v => (
-                        <Option key={v.id} value={v.id}>
-                          {v.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-              <Col lg={8} md={12} sm={24}>
-                <Form.Item label={fieldLabels.unit_ids}>
-                  {getFieldDecorator('unit_ids', {
-                    initialValue: item.unit_ids,
-                    rules: EDITOR_RULES.unit_ids,
+                <Form.Item label={fieldLabels.category_id}>
+                  {getFieldDecorator('category_id', {
+                    initialValue: item.category_id,
+                    rules: EDITOR_RULES.category_id,
                   })(
                     <Select mode="multiple" placeholder="请选择商品类别">
                       {categoryData.map(v => (
-                        <Option key={v.id} value={v.id}>
-                          {v.name}
+                        <Option key={v.category_id} value={v.category_id}>
+                          {v.category_name}
                         </Option>
                       ))}
                     </Select>
@@ -274,16 +257,40 @@ class Index extends React.Component {
               </Col>
             </Row>
             <Row gutter={16}>
-              <Col lg={8} md={12} sm={24}>
-                <Form.Item label={fieldLabels.report_tag_id}>
-                  {getFieldDecorator('report_tag_id', {
-                    initialValue: item.report_tag_id ? item.report_tag_id - 0 : item.report_tag_id,
-                    rules: EDITOR_RULES.report_tag_id,
+              <Col lg={8} md={8} sm={24}>
+                <Form.Item label={fieldLabels.goods_name}>
+                  {getFieldDecorator('goods_name', {
+                    initialValue: item.goods_name,
+                    rules: EDITOR_RULES.goods_name,
+                  })(<Input placeholder="请输入商品名称" />)}
+                </Form.Item>
+              </Col>
+              <Col lg={8} md={8} sm={24}>
+                <Form.Item label={fieldLabels.category_id}>
+                  {getFieldDecorator('category_id', {
+                    initialValue: item.category_id,
+                    rules: EDITOR_RULES.category_id,
                   })(
-                    <Select placeholder="请选择报告类型">
-                      {categoryData.map(vul => (
-                        <Option key={vul.id} value={vul.id}>
-                          {vul.name}
+                    <Select mode="multiple" placeholder="请选择商品类别">
+                      {categoryData.map(v => (
+                        <Option key={v.category_id} value={v.category_id}>
+                          {v.category_name}
+                        </Option>
+                      ))}
+                    </Select>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col lg={8} md={8} sm={24}>
+                <Form.Item label={fieldLabels.brand_id}>
+                  {getFieldDecorator('brand_id', {
+                    initialValue: item.brand_id,
+                    rules: EDITOR_RULES.brand_id,
+                  })(
+                    <Select mode="multiple" placeholder="请选择商品品牌">
+                      {brandData.map(v => (
+                        <Option key={v.brand_id} value={v.brand_id}>
+                          {v.brand_name}
                         </Option>
                       ))}
                     </Select>
@@ -292,12 +299,54 @@ class Index extends React.Component {
               </Col>
             </Row>
             <Row gutter={16}>
+              <Col lg={8} md={8} sm={24}>
+                <Form.Item label={fieldLabels.count}>
+                  {getFieldDecorator('count', {
+                    initialValue: item.count || 0,
+                    rules: EDITOR_RULES.count,
+                  })(<InputNumber min={0} placeholder="商品总数" />)}
+                </Form.Item>
+              </Col>
+              <Col lg={8} md={8} sm={24}>
+                <Form.Item label={fieldLabels.freight}>
+                  {getFieldDecorator('freight', {
+                    initialValue: item.freight || 0,
+                    rules: EDITOR_RULES.freight,
+                  })(
+                    <InputNumber
+                      min={0}
+                      placeholder="商品邮费"
+                      formatter={value => `¥${value}`}
+                      parser={value => value.replace('¥', '')}
+                      // formatter={value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                      // parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col lg={8} md={8} sm={24}>
+                <Form.Item label={fieldLabels.price}>
+                  {getFieldDecorator('price', {
+                    initialValue: item.price || 0,
+                    rules: EDITOR_RULES.price,
+                  })(
+                    <InputNumber
+                      min={0}
+                      placeholder="商品价格"
+                      formatter={value => `¥${value}`}
+                      parser={value => value.replace('¥', '')}
+                    />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16}>
               <Col lg={8} md={12} sm={24}>
-                <Form.Item label={fieldLabels.report_content}>
-                  {getFieldDecorator('report_content', {
-                    initialValue: item.report_content,
-                    rules: EDITOR_RULES.report_content,
-                  })(<TextArea rows={8} placeholder="请输入报告描述信息" />)}
+                <Form.Item label={fieldLabels.explain}>
+                  {getFieldDecorator('explain', {
+                    initialValue: item.explain,
+                    rules: EDITOR_RULES.explain,
+                  })(<TextArea rows={8} placeholder="请输入商品描述信息" />)}
                 </Form.Item>
               </Col>
             </Row>
@@ -306,36 +355,34 @@ class Index extends React.Component {
         <Form>
           <Card title="附件上传">
             <Row>
-              <Col span={12}>
-                <Form.Item>
-                  {getFieldDecorator('report_path', {
-                    valuePropName: 'fileList',
-                    getValueFromEvent: this.handleOnChange,
-                    initialValue: item.report_path || [],
-                  })(
-                    <Upload {...uploadProps}>
-                      <Button>
-                        <Icon type="upload" /> 上传文件
-                      </Button>
-                    </Upload>
-                  )}
-                </Form.Item>
-              </Col>
               <Col span={24}>
+                <Divider orientation="left">Left Text</Divider>
                 <div className="clearfix">
-                  <Upload
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture-card"
-                    fileList={fileList}
-                    onPreview={this.handlePreview}
-                    onChange={this.handleChange}
-                  >
-                    {fileList.length >= 3 ? null : uploadButton}
-                  </Upload>
+                  <Form.Item>
+                    {getFieldDecorator('goods_picture', {
+                      initialValue: item.goods_picture || [],
+                      rules: EDITOR_RULES.goods_picture,
+                    })(
+                      <Upload {...uploadPropsGoods}>
+                        {fileListGoods.length >= 1 ? null : uploadButton}
+                      </Upload>
+                    )}
+                  </Form.Item>
                   <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
                     <img alt="example" style={{ width: '100%' }} src={previewImage} />
                   </Modal>
                 </div>
+                <Divider orientation="left">Left Text</Divider>
+                <Form.Item>
+                  {getFieldDecorator('template_picture', {
+                    initialValue: item.template_picture || [],
+                    rules: EDITOR_RULES.template_picture,
+                  })(
+                    <Upload {...uploadPropsTemplate}>
+                      {fileListTemplate.length >= 1 ? null : uploadButton}
+                    </Upload>
+                  )}
+                </Form.Item>
               </Col>
             </Row>
           </Card>
