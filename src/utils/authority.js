@@ -39,7 +39,6 @@ export function isLogged() {
 
 export function isActionsAllowable(targets) {
   const allowableActions = getAuthority();
-  console.log(targets);
 
   // Handle String type actions
   if (typeof targets === 'string') {

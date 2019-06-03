@@ -27,6 +27,12 @@ export async function update(params) {
   });
 }
 
+export async function agentSelection() {
+  return request('/api/agent', {
+    method: 'GET',
+  });
+}
+
 export async function activate(params) {
   return request('/api/agent/activate', {
     method: 'PATCH',

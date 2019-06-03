@@ -7,6 +7,12 @@ const EDITOR_RULES = {
       message: '请输入1-50个字符',
     },
   ],
+  agent_id: [
+    {
+      required: true,
+      message: '请选择代理商',
+    },
+  ],
   category_id: [
     {
       required: true,

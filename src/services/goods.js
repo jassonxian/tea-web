@@ -1,8 +1,8 @@
 import request from '@/utils/request';
 
-export async function fetchGoods() {
+export async function fetchGoods(params) {
   return request('/api/goods', {
-    method: 'GET',
+    params,
   });
 }
 

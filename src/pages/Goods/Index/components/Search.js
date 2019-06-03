@@ -4,14 +4,14 @@ import AdvancedSearch from '@/components/AdvancedSearch';
 const Search = ({ filter, categoryData, brandData, ...rest }) => {
   const categorySelection = categoryData.map(item => {
     return {
-      value: item.id,
-      label: item.name,
+      value: item.category_id,
+      label: item.category_name,
     };
   });
   const brandSelection = brandData.map(item => {
     return {
-      value: item.id,
-      label: item.name,
+      value: item.brand_id,
+      label: item.brand_name,
     };
   });
   const searchFields = [
@@ -26,7 +26,7 @@ const Search = ({ filter, categoryData, brandData, ...rest }) => {
     {
       type: 'select',
       label: '品牌类型',
-      name: 'report_tag_id',
+      name: 'category_id',
       inputProps: {
         showSearch: true,
         placeholder: '请选择',
@@ -36,23 +36,14 @@ const Search = ({ filter, categoryData, brandData, ...rest }) => {
     },
     {
       type: 'select',
-      label: '接收单位',
-      name: 'unit_id',
+      label: '商品类型',
+      name: 'brand_id',
       inputProps: {
         showSearch: true,
         placeholder: '请选择',
         optionFilterProp: 'children',
       },
       options: brandSelection,
-    },
-    {
-      label: '创建时间',
-      type: 'range',
-      name: 'publish_time',
-      inputProps: {
-        format: 'YYYY-MM-DD HH:mm',
-        placeholder: ['开始时间', '结束时间'],
-      },
     },
   ];
   const advancedSearchProps = {

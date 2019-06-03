@@ -21,6 +21,7 @@ import {
 import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { momentToString } from '@/components/_utils/timeTools';
+import { isActionsAllowable } from '@/utils/authority';
 import EDITOR_RULES from './const';
 import styles from './index.less';
 
@@ -28,6 +29,7 @@ const { Option } = Select;
 const { TextArea } = Input;
 
 const fieldLabels = {
+  agent_id: '代理商',
   goods_name: '商品名称',
   category_id: '商品类别',
   brand_id: '商品品牌',
@@ -92,7 +94,7 @@ class Index extends React.Component {
   render() {
     const { form, dispatch, submitting, creategoods } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { item = {}, categoryData, brandData } = creategoods;
+    const { item = {}, categoryData, brandData, agentSelection } = creategoods;
     const { previewVisible, previewImage, fileListGoods, fileListTemplate } = this.state;
 
     const uploadButton = (
@@ -124,16 +126,12 @@ class Index extends React.Component {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           const modifiedValues = lodash.cloneDeep(values);
-          modifiedValues.goods_picture = [
-            modifiedValues.goods_picture.fileList.map(file => {
-              return file.response.data;
-            }),
-          ];
-          modifiedValues.template_picture = [
-            modifiedValues.template_picture.fileList.map(file => {
-              return file.response.data;
-            }),
-          ];
+          modifiedValues.goods_picture = modifiedValues.goods_picture.fileList.map(file => {
+            return file.response.data;
+          });
+          modifiedValues.template_picture = modifiedValues.template_picture.fileList.map(file => {
+            return file.response.data;
+          });
           dispatch({
             type: 'creategoods/create',
             payload: cleanSearchData(modifiedValues),
@@ -238,24 +236,26 @@ class Index extends React.Component {
       <PageHeaderWrapper title="新建电子报告" wrapperClassName={styles.advancedForm}>
         <Card title="基础信息" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
-            <Row gutter={16}>
-              <Col lg={8} md={12} sm={24}>
-                <Form.Item label={fieldLabels.category_id}>
-                  {getFieldDecorator('category_id', {
-                    initialValue: item.category_id,
-                    rules: EDITOR_RULES.category_id,
-                  })(
-                    <Select mode="multiple" placeholder="请选择商品类别">
-                      {categoryData.map(v => (
-                        <Option key={v.category_id} value={v.category_id}>
-                          {v.category_name}
-                        </Option>
-                      ))}
-                    </Select>
-                  )}
-                </Form.Item>
-              </Col>
-            </Row>
+            {isActionsAllowable('admin') ? (
+              <Row gutter={16}>
+                <Col lg={8} md={12} sm={24}>
+                  <Form.Item label={fieldLabels.agent_id}>
+                    {getFieldDecorator('agent_id', {
+                      initialValue: item.agent_id,
+                      rules: EDITOR_RULES.agent_id,
+                    })(
+                      <Select placeholder="请选择代理商">
+                        {agentSelection.map(v => (
+                          <Option key={v.agent_id} value={v.agent_id}>
+                            {v.agent_name}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
+                  </Form.Item>
+                </Col>
+              </Row>
+            ) : null}
             <Row gutter={16}>
               <Col lg={8} md={8} sm={24}>
                 <Form.Item label={fieldLabels.goods_name}>
@@ -271,7 +271,7 @@ class Index extends React.Component {
                     initialValue: item.category_id,
                     rules: EDITOR_RULES.category_id,
                   })(
-                    <Select mode="multiple" placeholder="请选择商品类别">
+                    <Select placeholder="请选择商品类别">
                       {categoryData.map(v => (
                         <Option key={v.category_id} value={v.category_id}>
                           {v.category_name}
@@ -287,7 +287,7 @@ class Index extends React.Component {
                     initialValue: item.brand_id,
                     rules: EDITOR_RULES.brand_id,
                   })(
-                    <Select mode="multiple" placeholder="请选择商品品牌">
+                    <Select placeholder="请选择商品品牌">
                       {brandData.map(v => (
                         <Option key={v.brand_id} value={v.brand_id}>
                           {v.brand_name}
