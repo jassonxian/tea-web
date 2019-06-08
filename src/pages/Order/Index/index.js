@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'dva';
-import router from 'umi/router';
-import { Card, Button } from 'antd';
+import { Card } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { handleRefresh } from '@/pages/_utils/utils';
 import Search from './components/Search';
 import List from './components/List';
 
-const Goods = ({ location, dispatch, goods, fetching }) => {
-  const { list, pagination, filter, sort, categoryData, brandData } = goods;
+const Order = ({ location, dispatch, order, fetching }) => {
+  const { list, pagination, filter, sort, categoryData, brandData } = order;
   const searchProps = {
     filter,
     categoryData,
@@ -36,29 +35,14 @@ const Goods = ({ location, dispatch, goods, fetching }) => {
     refresh() {
       handleRefresh(dispatch, location, { type: 'refresh' });
     },
-    onRemove(item) {
-      dispatch({
-        type: 'goods/remove',
-        payload: {
-          goods_id: Number(item.goods_id),
-        },
-      });
-    },
   };
-  const onCreate = () => {
-    router.push('/goods/create');
-  };
+  console.log(list);
   return (
-    <PageHeaderWrapper title="商品管理">
+    <PageHeaderWrapper title="订单管理">
       <Card bordered={false}>
         <div className="tableListPage">
           <div className="tableSearchForm">
             <Search {...searchProps} />
-          </div>
-          <div className="tableListOperator">
-            <Button icon="plus" type="primary" onClick={onCreate} style={{ marginRight: 24 }}>
-              新建
-            </Button>
           </div>
           <List {...listProps} />
         </div>
@@ -67,9 +51,9 @@ const Goods = ({ location, dispatch, goods, fetching }) => {
   );
 };
 
-const mapStateToProps = ({ goods, loading }) => ({
-  goods,
-  fetching: loading.effects['goods/fetch'],
+const mapStateToProps = ({ order, loading }) => ({
+  order,
+  fetching: loading.effects['order/fetch'],
 });
 
-export default connect(mapStateToProps)(Goods);
+export default connect(mapStateToProps)(Order);

@@ -18,7 +18,7 @@ export default enhancedModelExtend(common, {
   effects: {
     *fetchBrand(_, { call, put }) {
       const data = yield call(fetchBrand);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {
@@ -29,7 +29,7 @@ export default enhancedModelExtend(common, {
     },
     *fetchCategory(_, { call, put }) {
       const data = yield call(fetchCategory);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {
@@ -40,7 +40,7 @@ export default enhancedModelExtend(common, {
     },
     *fetchAgentSelect(_, { call, put }) {
       const data = yield call(agentSelection);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {
@@ -62,7 +62,7 @@ export default enhancedModelExtend(common, {
         sendDate = payload;
       }
       const data = yield call(createGoods, sendDate);
-      if (data.status) {
+      if (data.status === 'ok') {
         message.success('创建成功', 2);
         yield put(router.push('/goods'));
       } else {

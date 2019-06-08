@@ -1,10 +1,10 @@
 import { parse } from 'qs';
-import { fetchGoods, removeGoods } from '@/services/goods';
+import { fetch } from '@/services/order';
 import { fetchBrand, fetchCategory } from '@/services/tags';
 import enhancedModelExtend, { advancedList } from '@/utils/extend';
 
 export default enhancedModelExtend(advancedList, {
-  namespace: 'goods',
+  namespace: 'order',
 
   state: {
     categoryData: [],
@@ -14,7 +14,8 @@ export default enhancedModelExtend(advancedList, {
   effects: {
     *fetch({ payload }, { call, put }) {
       const { page, size, sort, ...filter } = payload;
-      const data = yield call(fetchGoods, payload);
+      const data = yield call(fetch, payload);
+      console.log(data);
       if (data.status === 'ok') {
         yield put({
           type: 'listSuccess',
@@ -33,7 +34,7 @@ export default enhancedModelExtend(advancedList, {
     },
     *fetchBrand(_, { call, put }) {
       const data = yield call(fetchBrand);
-      if (data.status === 'ok') {
+      if (data.status) {
         yield put({
           type: 'updateState',
           payload: {
@@ -44,7 +45,7 @@ export default enhancedModelExtend(advancedList, {
     },
     *fetchCategory(_, { call, put }) {
       const data = yield call(fetchCategory);
-      if (data.status === 'ok') {
+      if (data.status) {
         yield put({
           type: 'updateState',
           payload: {
@@ -52,17 +53,6 @@ export default enhancedModelExtend(advancedList, {
           },
         });
       }
-    },
-    *remove({ payload }, { call, put, select }) {
-      const {
-        pagination: { total },
-      } = yield select(({ goods }) => goods);
-      yield call(removeGoods, payload);
-      yield put({
-        type: 'refreshPage',
-        total,
-        next: 'fetch',
-      });
     },
   },
 
@@ -72,11 +62,9 @@ export default enhancedModelExtend(advancedList, {
     setup({ dispatch, history }) {
       history.listen(location => {
         const { pathname, search } = location;
-        if (pathname === '/goods') {
+        if (pathname === '/order') {
           const payload = parse(search, { ignoreQueryPrefix: true });
           dispatch({ type: 'fetch', payload });
-          dispatch({ type: 'fetchBrand' });
-          dispatch({ type: 'fetchCategory' });
         }
       });
     },

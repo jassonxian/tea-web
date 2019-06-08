@@ -20,7 +20,7 @@ export default enhancedModelExtend(advancedList, {
     *fetch({ payload }, { call, put }) {
       const { page, size, sort, ...filter } = payload;
       const data = yield call(fetch, payload);
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'listSuccess',
           payload: {
@@ -55,7 +55,7 @@ export default enhancedModelExtend(advancedList, {
         type: 'updateState',
         payload: { submitting: false },
       });
-      if (data.status) {
+      if (data.status === 'ok') {
         yield put({
           type: 'updateState',
           payload: {

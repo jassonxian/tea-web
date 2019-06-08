@@ -233,7 +233,7 @@ class Index extends React.Component {
       },
     };
     return (
-      <PageHeaderWrapper title="新建电子报告" wrapperClassName={styles.advancedForm}>
+      <PageHeaderWrapper title="新建商品" wrapperClassName={styles.advancedForm}>
         <Card title="基础信息" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
             {isActionsAllowable('admin') ? (
@@ -356,7 +356,7 @@ class Index extends React.Component {
           <Card title="附件上传">
             <Row>
               <Col span={24}>
-                <Divider orientation="left">Left Text</Divider>
+                <Divider orientation="left">商品图片</Divider>
                 <div className="clearfix">
                   <Form.Item>
                     {getFieldDecorator('goods_picture', {
@@ -372,7 +372,7 @@ class Index extends React.Component {
                     <img alt="example" style={{ width: '100%' }} src={previewImage} />
                   </Modal>
                 </div>
-                <Divider orientation="left">Left Text</Divider>
+                <Divider orientation="left">可自定义图片</Divider>
                 <Form.Item>
                   {getFieldDecorator('template_picture', {
                     initialValue: item.template_picture || [],

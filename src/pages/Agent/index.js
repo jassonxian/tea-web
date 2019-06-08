@@ -79,7 +79,7 @@ const Agent = ({ location, dispatch, agent, fetching }) => {
     dispatch({ type: 'agent/onCreate' });
   };
   return (
-    <PageHeaderWrapper title="用户管理">
+    <PageHeaderWrapper title="代理商管理">
       <Card bordered={false}>
         <div className="tableListPage">
           <div className="tableSearchForm">

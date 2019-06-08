@@ -64,7 +64,12 @@ export default [
         component: './Agent',
       },
       {
-        name: 'exception',
+        path: '/order',
+        icon: 'ordered-list',
+        name: 'order',
+        component: './Order/Index',
+      },
+      {
         icon: 'warning',
         path: '/exception',
         routes: [
