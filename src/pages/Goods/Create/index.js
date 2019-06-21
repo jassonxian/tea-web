@@ -21,7 +21,6 @@ import {
 import FooterToolbar from '@/components/FooterToolbar';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { momentToString } from '@/components/_utils/timeTools';
-import { isActionsAllowable } from '@/utils/authority';
 import EDITOR_RULES from './const';
 import styles from './index.less';
 
@@ -94,7 +93,7 @@ class Index extends React.Component {
   render() {
     const { form, dispatch, submitting, creategoods } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
-    const { item = {}, categoryData, brandData, agentSelection } = creategoods;
+    const { item = {}, categoryData, brandData } = creategoods;
     const { previewVisible, previewImage, fileListGoods, fileListTemplate } = this.state;
 
     const uploadButton = (
@@ -132,6 +131,7 @@ class Index extends React.Component {
           modifiedValues.template_picture = modifiedValues.template_picture.fileList.map(file => {
             return file.response.data;
           });
+          modifiedValues.agent_id = 1;
           dispatch({
             type: 'creategoods/create',
             payload: cleanSearchData(modifiedValues),
@@ -236,26 +236,6 @@ class Index extends React.Component {
       <PageHeaderWrapper title="新建商品" wrapperClassName={styles.advancedForm}>
         <Card title="基础信息" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
-            {isActionsAllowable('admin') ? (
-              <Row gutter={16}>
-                <Col lg={8} md={12} sm={24}>
-                  <Form.Item label={fieldLabels.agent_id}>
-                    {getFieldDecorator('agent_id', {
-                      initialValue: item.agent_id,
-                      rules: EDITOR_RULES.agent_id,
-                    })(
-                      <Select placeholder="请选择代理商">
-                        {agentSelection.map(v => (
-                          <Option key={v.agent_id} value={v.agent_id}>
-                            {v.agent_name}
-                          </Option>
-                        ))}
-                      </Select>
-                    )}
-                  </Form.Item>
-                </Col>
-              </Row>
-            ) : null}
             <Row gutter={16}>
               <Col lg={8} md={8} sm={24}>
                 <Form.Item label={fieldLabels.goods_name}>

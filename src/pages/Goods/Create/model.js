@@ -1,10 +1,8 @@
 import { message } from 'antd';
 import router from 'umi/router';
 import { createGoods } from '@/services/goods';
-import { agentSelection } from '@/services/agent';
 import { fetchBrand, fetchCategory } from '@/services/tags';
 import enhancedModelExtend, { common } from '@/utils/extend';
-import { isActionsAllowable } from '@/utils/authority';
 
 export default enhancedModelExtend(common, {
   namespace: 'creategoods',
@@ -12,7 +10,6 @@ export default enhancedModelExtend(common, {
   state: {
     categoryData: [],
     brandData: [],
-    agentSelection: [],
   },
 
   effects: {
@@ -34,17 +31,6 @@ export default enhancedModelExtend(common, {
           type: 'updateState',
           payload: {
             categoryData: data.data.records,
-          },
-        });
-      }
-    },
-    *fetchAgentSelect(_, { call, put }) {
-      const data = yield call(agentSelection);
-      if (data.status === 'ok') {
-        yield put({
-          type: 'updateState',
-          payload: {
-            agentSelection: data.data.records,
           },
         });
       }
@@ -97,9 +83,6 @@ export default enhancedModelExtend(common, {
         if (pathname === '/goods/create') {
           dispatch({ type: 'fetchBrand' });
           dispatch({ type: 'fetchCategory' });
-          if (isActionsAllowable('admin')) {
-            dispatch({ type: 'fetchAgentSelect' });
-          }
         }
       });
     },

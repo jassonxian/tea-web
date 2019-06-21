@@ -1,5 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
+import router from 'umi/router';
+import { isActionsAllowable } from '@/utils/authority';
 import { recoverSort } from '@/pages/_utils/utils';
 import Operation from '@/components/Operation';
 
@@ -11,25 +13,36 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
   const opertions = record => {
     const actions = [
       {
+        text: '详情',
+        primary: true,
+        onAction: () => router.push(`/?order_id=${record.order_id}`),
+      },
+    ];
+    if (record.order_status === 2) {
+      actions.push({
+        text: '打印',
+        primary: true,
+        onAction: () => console.log('print'),
+      });
+    }
+
+    if (isActionsAllowable('admin')) {
+      actions.push({
         text: '删除',
         confirmer: {
           title: '确定删除该报告吗？',
           placement: 'topRight',
           onConfirm: () => onRemove(record),
         },
-      },
-    ];
-
+      });
+    }
     return <Operation actions={actions} />;
   };
   const columns = [
     {
       title: '订单编号',
-      dataIndex: 'goods_name',
-      key: 'goods_name',
-      render: () => {
-        return '-';
-      },
+      dataIndex: 'order_code',
+      key: 'order_code',
     },
     {
       title: '订单金额',

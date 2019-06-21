@@ -56,6 +56,7 @@
     "bizcharts": "^3.5.3-beta.0",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "classnames": "^2.2.6",
+    "cmn-utils": "^1.0.9",
     "dva": "^2.4.1",
     "dva-model-extend": "^0.1.2",
     "enquire-js": "^0.2.1",
@@ -68,6 +69,7 @@
     "netlify-lambda": "^1.4.3",
     "numeral": "^2.0.6",
     "nzh": "^1.0.4",
+    "object-assign": "^4.1.1",
     "omit.js": "^1.0.0",
     "path-to-regexp": "^3.0.0",
     "prop-types": "^15.6.2",
@@ -83,7 +85,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "umi": "^2.4.4",
     "umi-plugin-react": "^1.7.2",
-    "umi-request": "^1.0.5",
+    "umi-request": "^1.0.7",
     "unique-key": "^0.0.6"
   },
   "devDependencies": {
