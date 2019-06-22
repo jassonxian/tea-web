@@ -24,11 +24,16 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/goods' },
+      {
+        path: '/',
+        redirect: '/goods',
+      },
+
       {
         path: '/goods',
         icon: 'appstore',
         name: 'goods',
+        authority: 'admin',
         routes: [
           {
             path: '/goods',
@@ -44,6 +49,7 @@ export default [
         path: '/tags',
         icon: 'tags',
         name: 'tags',
+        authority: 'admin',
         routes: [
           {
             path: '/tags/category',
@@ -61,13 +67,36 @@ export default [
         path: '/agent',
         icon: 'team',
         name: 'agent',
+        authority: 'admin',
         component: './Agent',
       },
       {
         path: '/order',
         icon: 'ordered-list',
         name: 'order',
+        authority: 'admin',
         component: './Order/Index',
+      },
+      {
+        path: '/userorder/',
+        name: 'userorder',
+        icon: 'ordered-list',
+        // authority: 'user',
+        component: './UserOrder',
+        routes: [
+          {
+            path: '/userorder/',
+            redirect: '/userorder/main',
+          },
+          {
+            path: '/userorder/main',
+            component: './UserOrder/Main',
+          },
+          {
+            path: '/userorder/sub',
+            component: './UserOrder/Sub',
+          },
+        ],
       },
       {
         icon: 'warning',

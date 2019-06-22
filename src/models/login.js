@@ -1,5 +1,4 @@
 import { routerRedux } from 'dva/router';
-import { stringify } from 'qs';
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
@@ -18,27 +17,13 @@ export default {
       yield put({
         type: 'changeLoginStatus',
         payload: {
-          currentAuthority: response.data.username,
+          currentAuthority: response.data.username === 'admin' ? 'admin' : 'user',
         },
       });
       // Login successfully
       if (response.status === 'ok') {
         reloadAuthorized();
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
-        let { redirect } = params;
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
-            }
-          } else {
-            redirect = null;
-          }
-        }
-        yield put(routerRedux.replace(redirect || '/'));
+        yield put(routerRedux.replace(response.data.username === 'admin' ? '/' : '/userorder'));
       }
     },
 
@@ -61,9 +46,6 @@ export default {
         yield put(
           routerRedux.replace({
             pathname: '/user/login',
-            search: stringify({
-              redirect: window.location.href,
-            }),
           })
         );
       }
