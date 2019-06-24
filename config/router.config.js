@@ -28,7 +28,18 @@ export default [
         path: '/',
         redirect: '/goods',
       },
-
+      {
+        path: '/dashboard/user',
+        icon: 'dashboard',
+        name: 'dashboard',
+        component: './Dashboard/User',
+      },
+      {
+        path: '/dashboard/admin',
+        icon: 'dashboard',
+        name: 'dashboard',
+        component: './Dashboard/Admin',
+      },
       {
         path: '/goods',
         icon: 'appstore',
@@ -69,6 +80,13 @@ export default [
         name: 'agent',
         authority: 'admin',
         component: './Agent',
+      },
+      {
+        path: '/video',
+        icon: 'video-camera',
+        name: 'video',
+        authority: 'admin',
+        component: './Video',
       },
       {
         path: '/order',

@@ -80,9 +80,9 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'http://172.30.0.196:5012',
+      target: 'https://phpna.com',
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      // pathRewrite: { '^/api': '' },
     },
   },
   ignoreMomentLocale: true,
