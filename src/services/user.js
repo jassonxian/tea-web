@@ -7,3 +7,10 @@ export async function query() {
 export async function queryCurrent() {
   return request('/api/agent/current');
 }
+
+export async function queryWallet(params) {
+  return request('/api/agent_wallet', {
+    method: 'GET',
+    params,
+  });
+}

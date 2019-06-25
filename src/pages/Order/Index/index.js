@@ -8,19 +8,10 @@ import Search from './components/Search';
 import List from './components/List';
 
 class Order extends React.Component {
-  state = {
-    element1: null,
-  };
-
-  saveElement1 = node => {
-    this.setState({
-      element1: node,
-    });
-  };
+  state = {};
 
   render() {
     const { location, dispatch, order, fetching } = this.props;
-    const { element1 } = this.state;
     const { list, pagination, filter, sort, categoryData, brandData } = order;
     const searchProps = {
       filter,
@@ -51,30 +42,30 @@ class Order extends React.Component {
       },
     };
     /* eslint-disable */
-    const printRender = () => {
-      return (
-        <div>
-          <table border="1" style={{ width: '100%' }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'center' }}>姓名</th>
-                <th style={{ textAlign: 'center' }}>年级</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ textAlign: 'center' }}>张三</td>
-                <td style={{ textAlign: 'center' }}>一年级</td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: 'center' }}>王五</td>
-                <td style={{ textAlign: 'center' }}>二年级</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      );
-    };
+    const printRender = (
+      <div>
+        <table border="1" style={{ width: '100%' }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: 'center' }}>订单编号</th>
+              <th style={{ textAlign: 'center' }}>订单金额</th>
+              <th style={{ textAlign: 'center' }}>创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            {list.map(item => {
+              return (
+                <tr>
+                  <td style={{ textAlign: 'center' }}>{item.order_code}</td>
+                  <td style={{ textAlign: 'center' }}>{`¥${item.order_price}`}</td>
+                  <td style={{ textAlign: 'center' }}>{item.create_time}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
     return (
       <PageHeaderWrapper title="订单管理">
         <Card bordered={false}>
@@ -83,11 +74,11 @@ class Order extends React.Component {
               <Search {...searchProps} />
             </div>
             <div className="tableListOperator">
-              {element1 ? (
-                <Print trigger={<Button icon="printer">打印</Button>} content={element1} />
+              {printRender ? (
+                <Print trigger={<Button icon="printer">打印</Button>} content={printRender} />
               ) : null}
             </div>
-            <div ref={this.saveElement1}>
+            <div>
               <List {...listProps} />
             </div>
           </div>

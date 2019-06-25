@@ -1,4 +1,4 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
+import { query as queryUsers, queryCurrent, queryWallet } from '@/services/user';
 
 export default {
   namespace: 'user',
@@ -6,6 +6,7 @@ export default {
   state: {
     list: [],
     currentUser: {},
+    wallet: {},
   },
 
   effects: {
@@ -23,6 +24,13 @@ export default {
         payload: response.data,
       });
     },
+    *fetchWallet({ payload }, { call, put }) {
+      const response = yield call(queryWallet, payload);
+      yield put({
+        type: 'saveWallet',
+        payload: response.data,
+      });
+    },
   },
 
   reducers: {
@@ -36,6 +44,12 @@ export default {
       return {
         ...state,
         currentUser: action.payload || {},
+      };
+    },
+    saveWallet(state, action) {
+      return {
+        ...state,
+        wallet: action.payload || {},
       };
     },
     changeNotifyCount(state, action) {
