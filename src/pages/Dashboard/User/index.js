@@ -5,20 +5,19 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './index.less';
 import logo from './user.png';
 
-@connect(({ loading, user }) => ({
+@connect(({ loading, user, wallet }) => ({
   currentUser: user.currentUser,
+  wallet,
   currentUserLoading: loading.effects['user/fetchCurrent'],
+  fetching: loading.effects['wallet/fetch'],
 }))
-class Center extends PureComponent {
+class Wallet extends PureComponent {
   state = {};
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
-    });
-    dispatch({
-      type: 'user/fetchWallet',
     });
   }
 
@@ -57,4 +56,4 @@ class Center extends PureComponent {
   }
 }
 
-export default Center;
+export default Wallet;
