@@ -30,7 +30,6 @@ export default {
     setup({ dispatch, history }) {
       history.listen(location => {
         const { pathname } = location;
-        console.log(pathname);
         if (pathname === '/dashboard/user') {
           dispatch({ type: 'fetch' });
         }

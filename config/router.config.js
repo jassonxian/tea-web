@@ -26,7 +26,7 @@ export default [
       // dashboard
       {
         path: '/',
-        redirect: '/goods',
+        redirect: '/dashboard/user',
       },
       {
         path: '/dashboard/user',
@@ -34,12 +34,12 @@ export default [
         name: 'dashboard',
         component: './Dashboard/User',
       },
-      {
-        path: '/dashboard/admin',
-        icon: 'dashboard',
-        name: 'dashboard',
-        component: './Dashboard/Admin',
-      },
+      // {
+      //   path: '/dashboard/admin',
+      //   icon: 'dashboard',
+      //   name: 'dashboard',
+      //   component: './Dashboard/Admin',
+      // },
       {
         path: '/goods',
         icon: 'appstore',
