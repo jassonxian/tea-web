@@ -1,7 +1,11 @@
 import React, { PureComponent, Suspense } from 'react';
 import { connect } from 'dva';
-import { Card, Row, Col, Icon } from 'antd';
+import numeral from 'numeral';
+import { Card, Row, Col, Icon, Tooltip } from 'antd';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import { getTimeDistance } from '@/utils/utils';
+import Yuan from '@/utils/Yuan';
+import { ChartCard, Field } from '@/components/Charts';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './index.less';
 import logo from './user.png';
@@ -64,33 +68,76 @@ class Wallet extends PureComponent {
   };
 
   render() {
-    const { currentUser, currentUserLoading } = this.props;
+    const { currentUser, currentUserLoading, wallet } = this.props;
+    const { userInfo } = wallet;
     return (
       <GridContent className={styles.userCenter}>
-        <Row gutter={24} style={{ marginBottom: 24 }}>
-          <Col lg={7} md={24}>
-            <Card bordered={false} style={{ marginBottom: 24 }} loading={currentUserLoading}>
+        <Row gutter={24}>
+          <Col lg={8} md={24}>
+            <Card
+              bordered={false}
+              style={{ marginBottom: 24, height: 249 }}
+              loading={currentUserLoading}
+            >
               {currentUser && Object.keys(currentUser).length ? (
-                <div>
-                  <div className={styles.avatarHolder}>
-                    <img alt="" src={logo} />
-                    <div className={styles.name}>{currentUser.agent_name}</div>
-                    <div>{currentUser.username}</div>
-                  </div>
-                  <div className={styles.detail}>
-                    <p>
-                      <Icon type="idcard" />
-                      {currentUser.agent_code}
-                    </p>
-                  </div>
+                <div className={styles.avatarHolder}>
+                  <img alt="" src={logo} />
+                  <div className={styles.name}>{currentUser.agent_name}</div>
                 </div>
               ) : (
                 'loading...'
               )}
             </Card>
           </Col>
-          <Col lg={17} md={24}>
-            <Card bordered={false}>asdsasdasdasdas</Card>
+          <Col lg={8} md={24}>
+            <Card
+              bordered={false}
+              style={{ marginBottom: 24, height: 249 }}
+              loading={currentUserLoading}
+            >
+              <div className={styles.detail}>
+                <p>
+                  <Icon type="user" />
+                  {userInfo.username}
+                </p>
+                <p>
+                  <Icon type="idcard" style={{ fontSize: 20 }} />
+                  {userInfo.agent_code}
+                </p>
+                <p>
+                  <Icon type="phone" style={{ fontSize: 20 }} />
+                  {userInfo.phone}
+                </p>
+              </div>
+            </Card>
+          </Col>
+          <Col lg={8} md={24}>
+            <ChartCard
+              style={{ height: 249 }}
+              bordered={false}
+              title={
+                <FormattedMessage id="app.analysis.total-sales" defaultMessage="Total Sales" />
+              }
+              action={
+                <Tooltip
+                  title={
+                    <FormattedMessage id="app.analysis.introduce" defaultMessage="Introduce" />
+                  }
+                >
+                  <Icon type="info-circle-o" />
+                </Tooltip>
+              }
+              total={() => <Yuan>126560</Yuan>}
+              footer={
+                <Field
+                  label={
+                    <FormattedMessage id="app.analysis.day-sales" defaultMessage="Daily Sales" />
+                  }
+                  value={`￥${numeral(12423).format('0,0')}`}
+                />
+              }
+              contentHeight={46}
+            />
           </Col>
         </Row>
         <Suspense fallback={null}>

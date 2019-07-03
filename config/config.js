@@ -80,7 +80,7 @@ export default {
   },
   proxy: {
     '/api/': {
-      target: 'http://47.240.11.162/',
+      target: 'https://request.kanghua.phpna.com/',
       changeOrigin: true,
       // pathRewrite: { '^/api': '' },
     },

@@ -3,16 +3,21 @@ import fetch from '@/services/wallet';
 export default {
   namespace: 'wallet',
 
-  state: {},
+  state: {
+    userInfo: {},
+  },
 
   effects: {
-    *fetch(_, { call }) {
-      console.log('ssss');
+    *fetch(_, { call, put }) {
       const data = yield call(fetch);
-      if (data.status) {
-        // yield put({
-        //     type: 'updateState'
-        // })
+      console.log(data);
+      if (data.status === 'ok') {
+        yield put({
+          type: 'updateState',
+          payload: {
+            userInfo: data.data.records[0],
+          },
+        });
       }
     },
   },
