@@ -15,8 +15,15 @@ export async function fetchSub(params) {
 }
 
 export async function fetchDetails(params) {
-  return request('/api/order/agent/details', {
-    method: 'get',
+  return request('/api/order/agent/detail', {
+    method: 'GET',
+    params,
+  });
+}
+
+export async function address(params) {
+  return request('/api/address/agent/details', {
+    method: 'GET',
     params,
   });
 }

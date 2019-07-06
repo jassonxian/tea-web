@@ -96,6 +96,13 @@ export default [
         component: './Order/Index',
       },
       {
+        path: '/order/details',
+        name: 'orderdetails',
+        hideInMenu: true,
+        authority: 'admin',
+        component: './Order/Details',
+      },
+      {
         path: '/userorder/',
         name: 'userorder',
         icon: 'ordered-list',

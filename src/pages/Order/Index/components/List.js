@@ -15,7 +15,7 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
       {
         text: '详情',
         primary: true,
-        onAction: () => router.push(`/?order_id=${record.order_id}`),
+        onAction: () => router.push(`/order/details?order_list_id=${record.order_id}`),
       },
     ];
     if (record.order_status === 2) {

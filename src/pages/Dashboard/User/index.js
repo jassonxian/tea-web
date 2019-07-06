@@ -23,21 +23,18 @@ class Wallet extends PureComponent {
     rangePickerValue: getTimeDistance('year'),
   };
 
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-    });
-  }
+  componentDidMount() {}
 
   selectDate = type => {
     const { dispatch } = this.props;
     this.setState({
       rangePickerValue: getTimeDistance(type),
     });
-
     dispatch({
-      type: 'chart/fetchSalesData',
+      type: 'wallet/fetchTrend',
+      payload: {
+        statistic_type: type,
+      },
     });
   };
 
@@ -56,20 +53,9 @@ class Wallet extends PureComponent {
     return '';
   };
 
-  getdata = () => {
-    const salesData = [];
-    for (let i = 0; i < 12; i += 1) {
-      salesData.push({
-        x: `${i + 1}月`,
-        y: Math.floor(Math.random() * 1000) + 200,
-      });
-    }
-    return salesData;
-  };
-
   render() {
     const { currentUser, currentUserLoading, wallet } = this.props;
-    const { userInfo } = wallet;
+    const { userInfo, agentData, trendData } = wallet;
     return (
       <GridContent className={styles.userCenter}>
         <Row gutter={24}>
@@ -115,9 +101,7 @@ class Wallet extends PureComponent {
             <ChartCard
               style={{ height: 249 }}
               bordered={false}
-              title={
-                <FormattedMessage id="app.analysis.total-sales" defaultMessage="Total Sales" />
-              }
+              title="钱包总额"
               action={
                 <Tooltip
                   title={
@@ -127,14 +111,9 @@ class Wallet extends PureComponent {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={() => <Yuan>126560</Yuan>}
+              total={() => <Yuan>{userInfo.total_money || 0}</Yuan>}
               footer={
-                <Field
-                  label={
-                    <FormattedMessage id="app.analysis.day-sales" defaultMessage="Daily Sales" />
-                  }
-                  value={`￥${numeral(12423).format('0,0')}`}
-                />
+                <Field label="当月提成" value={`￥${numeral(userInfo.money || 0).format('0,0')}`} />
               }
               contentHeight={46}
             />
@@ -142,9 +121,10 @@ class Wallet extends PureComponent {
         </Row>
         <Suspense fallback={null}>
           <SalesCard
-            salesData={this.getdata()}
+            salesData={trendData}
             isActive={this.isActive}
             selectDate={this.selectDate}
+            rankingListData={agentData}
           />
         </Suspense>
       </GridContent>

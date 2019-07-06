@@ -77,19 +77,19 @@ class Bar extends Component {
     const { autoHideXLabels } = this.state;
 
     const scale = {
-      x: {
+      time: {
         type: 'cat',
       },
-      y: {
+      count: {
         min: 0,
       },
     };
 
     const tooltip = [
-      'x*y',
-      (x, y) => ({
-        name: x,
-        value: y,
+      'time*count',
+      (time, count) => ({
+        name: time,
+        value: count,
       }),
     ];
     const { height: stateHeight } = this.state;
@@ -106,14 +106,14 @@ class Bar extends Component {
             padding={padding || 'auto'}
           >
             <Axis
-              name="x"
+              name="time"
               title={false}
               label={autoHideXLabels ? false : {}}
               tickLine={autoHideXLabels ? false : {}}
             />
-            <Axis name="y" min={0} />
+            <Axis name="count" min={0} />
             <Tooltip showTitle={false} crosshairs={false} />
-            <Geom type="interval" position="x*y" color={color} tooltip={tooltip} />
+            <Geom type="interval" position="time*count" color={color} tooltip={tooltip} />
           </Chart>
         </div>
       </div>

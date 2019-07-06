@@ -3,6 +3,7 @@ export default {
   'menu.agent': '代理商管理',
   'menu.userorder': '代理商订单管理',
   'menu.order': '订单管理',
+  'menu.orderdetails': '订单详情',
   'menu.tags.category': '分类标签管理',
   'menu.tags.brand': '品牌标签管理',
   'menu.video': '宣传视频',

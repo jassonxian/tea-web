@@ -28,6 +28,7 @@ module.exports = {
       },
     ],
     camelcase: 0,
+    'no-nested-ternary': 0,
     'no-param-reassign': 0,
     'react/destructuring-assignment': 0,
     'consistent-return': 0,
