@@ -7,6 +7,7 @@ import { getTimeDistance } from '@/utils/utils';
 import Yuan from '@/utils/Yuan';
 import { ChartCard, Field } from '@/components/Charts';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import Lists from './Lists';
 import styles from './index.less';
 import logo from './user.png';
 
@@ -119,14 +120,18 @@ class Wallet extends PureComponent {
             />
           </Col>
         </Row>
-        <Suspense fallback={null}>
-          <SalesCard
-            salesData={trendData}
-            isActive={this.isActive}
-            selectDate={this.selectDate}
-            rankingListData={agentData}
-          />
-        </Suspense>
+        {currentUser.username === 'admin' ? (
+          <Lists />
+        ) : (
+          <Suspense fallback={null}>
+            <SalesCard
+              salesData={trendData}
+              isActive={this.isActive}
+              selectDate={this.selectDate}
+              rankingListData={agentData}
+            />
+          </Suspense>
+        )}
       </GridContent>
     );
   }

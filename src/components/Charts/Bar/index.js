@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Chart, Axis, Tooltip, Geom } from 'bizcharts';
+import { Chart, Axis, Tooltip, Geom, Legend } from 'bizcharts';
+import DataSet from '@antv/data-set';
 import Debounce from 'lodash-decorators/debounce';
 import Bind from 'lodash-decorators/bind';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -83,6 +84,12 @@ class Bar extends Component {
       count: {
         min: 0,
       },
+      sub_agent_count: {
+        min: 0,
+      },
+      agent_count: {
+        min: 0,
+      },
     };
 
     const tooltip = [
@@ -94,6 +101,17 @@ class Bar extends Component {
     ];
     const { height: stateHeight } = this.state;
     const height = propsHeight || stateHeight;
+    const ds = new DataSet();
+    const dv = ds.createView().source(data);
+    dv.transform({
+      type: 'map',
+      callback: row => {
+        return {
+          ...row,
+          count: row.agent_count || 0 + row.sub_agent_count || 0,
+        };
+      },
+    });
     return (
       <div className={styles.chart} style={{ height }} ref={this.handleRoot}>
         <div ref={this.handleRef}>
@@ -102,9 +120,10 @@ class Bar extends Component {
             scale={scale}
             height={title ? height - 41 : height}
             forceFit={forceFit}
-            data={data}
+            data={dv}
             padding={padding || 'auto'}
           >
+            <Legend />
             <Axis
               name="time"
               title={false}

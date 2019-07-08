@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Row, Col, Card, Tabs } from 'antd';
+import { Row, Col, Card, Tabs, Empty } from 'antd';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import numeral from 'numeral';
 import styles from './Analysis.less';
@@ -36,21 +36,27 @@ const SalesCard = memo(({ salesData, isActive, loading, selectDate, rankingListD
             <Col xl={8} lg={12} md={12} sm={24} xs={24}>
               <div className={styles.salesRank}>
                 <h4 className={styles.rankingTitle}>下级代理商销售量排名</h4>
-                <ul className={styles.rankingList}>
-                  {rankingListData.map((item, i) => (
-                    <li key={item.title}>
-                      <span className={`${styles.rankingItemNumber} ${i < 3 ? styles.active : ''}`}>
-                        {i + 1}
-                      </span>
-                      <span className={styles.rankingItemTitle} title={item.title}>
-                        {item.agent_name}
-                      </span>
-                      <span className={styles.rankingItemValue}>
-                        {numeral(item.count).format('0,0')}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                {rankingListData.length ? (
+                  <ul className={styles.rankingList}>
+                    {rankingListData.map((item, i) => (
+                      <li key={item.title}>
+                        <span
+                          className={`${styles.rankingItemNumber} ${i < 3 ? styles.active : ''}`}
+                        >
+                          {i + 1}
+                        </span>
+                        <span className={styles.rankingItemTitle} title={item.title}>
+                          {item.agent_name}
+                        </span>
+                        <span className={styles.rankingItemValue}>
+                          {numeral(item.count).format('0,0')}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <Empty />
+                )}
               </div>
             </Col>
           </Row>

@@ -1,6 +1,7 @@
-import { agent, fetch, trend } from '@/services/wallet';
+import { agent, fetch, trend, fetchAgent } from '@/services/wallet';
+import enhancedModelExtend, { advancedList } from '@/utils/extend';
 
-export default {
+export default enhancedModelExtend(advancedList, {
   namespace: 'wallet',
 
   state: {
@@ -23,6 +24,25 @@ export default {
         });
       }
     },
+    *fetchAgents({ payload }, { call, put }) {
+      const { page, size, sort, ...filter } = payload;
+      const data = yield call(fetchAgent, payload);
+      if (data.status === 'ok') {
+        yield put({
+          type: 'listSuccess',
+          payload: {
+            list: data.data.records,
+            pagination: {
+              current: Number(page) || 1,
+              pageSize: Number(size) || 10,
+              total: data.data.recordsFiltered || data.data.filter_count,
+            },
+            filter,
+            sort: sort || '',
+          },
+        });
+      }
+    },
     *fetchTrend({ payload }, { call, put, all }) {
       const [agentData, trendData] = yield all([call(agent, payload), call(trend, payload)]);
       if (trendData.status === 'ok' && agentData.status === 'ok') {
@@ -37,14 +57,7 @@ export default {
     },
   },
 
-  reducers: {
-    updateState(state, { payload }) {
-      return {
-        ...state,
-        ...payload,
-      };
-    },
-  },
+  reducers: {},
 
   subscriptions: {
     setup({ dispatch, history }) {
@@ -56,4 +69,4 @@ export default {
       });
     },
   },
-};
+});

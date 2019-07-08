@@ -20,3 +20,10 @@ export async function agent(params) {
     params,
   });
 }
+
+export async function fetchAgent(params) {
+  return request('/api/agent_wallet', {
+    method: 'get',
+    params,
+  });
+}

@@ -23,7 +23,7 @@ export default {
       // Login successfully
       if (response.status === 'ok') {
         reloadAuthorized();
-        yield put(routerRedux.replace(response.data.username === 'admin' ? '/' : '/userorder'));
+        yield put(routerRedux.replace('/'));
       }
     },
 
