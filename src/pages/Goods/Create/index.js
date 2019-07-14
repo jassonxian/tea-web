@@ -91,11 +91,16 @@ class Index extends React.Component {
   };
 
   render() {
-    const { form, dispatch, submitting, creategoods } = this.props;
+    const { form, dispatch, submitting, creategoods, location } = this.props;
     const { getFieldDecorator, validateFieldsAndScroll, getFieldsError } = form;
     const { item = {}, categoryData, brandData } = creategoods;
     const { previewVisible, previewImage, fileListGoods, fileListTemplate } = this.state;
-
+    const { query } = location;
+    const { goods_id } = query;
+    let updategoods;
+    if (query && query.type === 'update') {
+      updategoods = true;
+    }
     const uploadButton = (
       <div>
         <Icon type="plus" />
@@ -125,13 +130,27 @@ class Index extends React.Component {
       validateFieldsAndScroll((error, values) => {
         if (!error) {
           const modifiedValues = lodash.cloneDeep(values);
-          modifiedValues.goods_picture = modifiedValues.goods_picture.fileList.map(file => {
-            return file.response.data;
-          });
-          modifiedValues.template_picture = modifiedValues.template_picture.fileList.map(file => {
-            return file.response.data;
-          });
+          if (!Array.isArray(modifiedValues.goods_picture)) {
+            modifiedValues.goods_picture = modifiedValues.goods_picture.fileList.map(file => {
+              return file.response.data;
+            });
+          }
+          if (!Array.isArray(modifiedValues.template_picture)) {
+            modifiedValues.template_picture = modifiedValues.template_picture.fileList.map(file => {
+              return file.response.data;
+            });
+          }
           modifiedValues.agent_id = 1;
+          if (updategoods && goods_id) {
+            const sendData = {
+              ...modifiedValues,
+              goods_id,
+            };
+            return dispatch({
+              type: 'creategoods/updateGoods',
+              payload: cleanSearchData(sendData),
+            });
+          }
           dispatch({
             type: 'creategoods/create',
             payload: cleanSearchData(modifiedValues),
@@ -233,7 +252,10 @@ class Index extends React.Component {
       },
     };
     return (
-      <PageHeaderWrapper title="新建商品" wrapperClassName={styles.advancedForm}>
+      <PageHeaderWrapper
+        title={updategoods ? '编辑商品' : '新建商品'}
+        wrapperClassName={styles.advancedForm}
+      >
         <Card title="基础信息" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
             <Row gutter={16}>
@@ -330,6 +352,39 @@ class Index extends React.Component {
                 </Form.Item>
               </Col>
             </Row>
+            {updategoods ? (
+              <div>
+                <Divider orientation="left">商品图片展示</Divider>
+                <Row gutter={16}>
+                  <Col lg={12} md={12} sm={24}>
+                    <h4>商品原图</h4>
+                    {item.goods_picture ? (
+                      <img
+                        style={{ width: 200 }}
+                        key="goods_picture"
+                        src={`/api/goods/picture?goods_id=${item.goods_id}&filepath=${
+                          item.goods_picture[0][0]
+                        }`}
+                        alt="暂无"
+                      />
+                    ) : null}
+                  </Col>
+                  <Col lg={12} md={12} sm={24}>
+                    <h4>商品缩略图</h4>
+                    {item.template_picture ? (
+                      <img
+                        style={{ width: 200 }}
+                        key="template_picture"
+                        src={`/api/goods/picture?goods_id=${item.goods_id}&filepath=${
+                          item.template_picture[0][0]
+                        }`}
+                        alt="暂无"
+                      />
+                    ) : null}
+                  </Col>
+                </Row>
+              </div>
+            ) : null}
           </Form>
         </Card>
         <Form>
@@ -340,7 +395,7 @@ class Index extends React.Component {
                 <div className="clearfix">
                   <Form.Item>
                     {getFieldDecorator('goods_picture', {
-                      initialValue: item.goods_picture || [],
+                      initialValue: item.goods_picture ? item.goods_picture : [],
                       rules: EDITOR_RULES.goods_picture,
                     })(
                       <Upload {...uploadPropsGoods}>
@@ -352,10 +407,10 @@ class Index extends React.Component {
                     <img alt="example" style={{ width: '100%' }} src={previewImage} />
                   </Modal>
                 </div>
-                <Divider orientation="left">可自定义图片</Divider>
+                <Divider orientation="left">商品缩略图</Divider>
                 <Form.Item>
                   {getFieldDecorator('template_picture', {
-                    initialValue: item.template_picture || [],
+                    initialValue: item.template_picture ? item.template_picture : [],
                     rules: EDITOR_RULES.template_picture,
                   })(
                     <Upload {...uploadPropsTemplate}>
@@ -369,9 +424,15 @@ class Index extends React.Component {
         </Form>
         <FooterToolbar style={{ width: this.state.width }}>
           {getErrorInfo()}
-          <Button type="primary" onClick={validate} loading={submitting}>
-            提交
-          </Button>
+          {updategoods ? (
+            <Button type="primary" onClick={validate} loading={submitting}>
+              更新
+            </Button>
+          ) : (
+            <Button type="primary" onClick={validate} loading={submitting}>
+              提交
+            </Button>
+          )}
         </FooterToolbar>
       </PageHeaderWrapper>
     );

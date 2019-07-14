@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Tag, Row, Col } from 'antd';
+import router from 'umi/router';
 import { recoverSort } from '@/pages/_utils/utils';
 import Operation from '@/components/Operation';
 import styles from '../index.less';
@@ -12,9 +13,14 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
   const opertions = record => {
     const actions = [
       {
+        text: '编辑',
+        primary: true,
+        onAction: () => router.push(`/goods/create?goods_id=${record.goods_id}&type=update`),
+      },
+      {
         text: '删除',
         confirmer: {
-          title: '确定删除该报告吗？',
+          title: '确定删除该商品吗？',
           placement: 'topRight',
           onConfirm: () => onRemove(record),
         },
@@ -38,6 +44,12 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
       render: text => {
         return <Tag>¥{text}</Tag>;
       },
+    },
+    {
+      title: '剩余商品数量(件)',
+      key: 'count',
+      dataIndex: 'count',
+      align: 'center',
     },
     {
       title: '操作',
@@ -82,7 +94,7 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
                 );
               })}
             </div>
-            <h3>订制图片</h3>
+            <h3>缩略图</h3>
             <div className={styles.showImg}>
               {record.template_picture.map(item => {
                 return (

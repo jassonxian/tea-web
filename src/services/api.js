@@ -1,6 +1,13 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
+export async function password(params) {
+  return request('/api/agent/password', {
+    method: 'PUT',
+    data: params,
+  });
+}
+
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }

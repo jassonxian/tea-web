@@ -30,7 +30,7 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
       actions.push({
         text: '删除',
         confirmer: {
-          title: '确定删除该报告吗？',
+          title: '确定删除该订单吗？',
           placement: 'topRight',
           onConfirm: () => onRemove(record),
         },

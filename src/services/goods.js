@@ -13,9 +13,22 @@ export async function createGoods(params) {
   });
 }
 
+export async function updateGoods(params) {
+  return request('/api/goods', {
+    method: 'PUT',
+    data: params,
+  });
+}
+
 export async function removeGoods(params) {
   return request('/api/goods', {
     method: 'DELETE',
     data: params,
+  });
+}
+
+export async function goodsDetails(params) {
+  return request('/api/goods/detail', {
+    params,
   });
 }

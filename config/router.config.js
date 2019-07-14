@@ -124,6 +124,25 @@ export default [
         ],
       },
       {
+        path: '/account',
+        name: 'account',
+        component: './Account/Info',
+        routes: [
+          {
+            path: '/account',
+            redirect: '/account/password',
+          },
+          {
+            path: '/account/base',
+            component: './Account/BaseView',
+          },
+          {
+            path: '/account/password',
+            component: './Account/Password',
+          },
+        ],
+      },
+      {
         icon: 'warning',
         path: '/exception',
         routes: [

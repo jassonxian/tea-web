@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import router from 'umi/router';
-import { createGoods } from '@/services/goods';
+import { parse } from 'qs';
+import { createGoods, goodsDetails, updateGoods } from '@/services/goods';
 import { fetchBrand, fetchCategory } from '@/services/tags';
 import enhancedModelExtend, { common } from '@/utils/extend';
 
@@ -8,6 +9,7 @@ export default enhancedModelExtend(common, {
   namespace: 'creategoods',
 
   state: {
+    item: {},
     categoryData: [],
     brandData: [],
   },
@@ -35,6 +37,15 @@ export default enhancedModelExtend(common, {
         });
       }
     },
+    *updateGoods({ payload }, { call }) {
+      const data = yield call(updateGoods, payload);
+      if (data.status === 'ok') {
+        message.success('更新成功', 2);
+        router.goBack();
+      } else {
+        message.error(data.msg, 2);
+      }
+    },
     *create({ payload }, { call, put, select }) {
       const state = yield select(({ creategoods }) => creategoods);
       const { goods_id } = state;
@@ -53,6 +64,20 @@ export default enhancedModelExtend(common, {
         yield put(router.push('/goods'));
       } else {
         message.error(data.msg, 2);
+      }
+    },
+    *fetchDetails({ payload }, { call, put }) {
+      const { goods_id } = payload;
+      if (goods_id) {
+        const data = yield call(goodsDetails, { goods_id });
+        if (data.status === 'ok') {
+          yield put({
+            type: 'updateState',
+            payload: {
+              item: data.data,
+            },
+          });
+        }
       }
     },
   },
@@ -79,8 +104,13 @@ export default enhancedModelExtend(common, {
   },
   subscriptions: {
     setup({ history, dispatch }) {
-      return history.listen(({ pathname }) => {
+      return history.listen(({ pathname, search }) => {
         if (pathname === '/goods/create') {
+          const payload = parse(search, { ignoreQueryPrefix: true });
+          dispatch({
+            type: 'fetchDetails',
+            payload,
+          });
           dispatch({ type: 'fetchBrand' });
           dispatch({ type: 'fetchCategory' });
         }

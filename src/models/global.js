@@ -1,4 +1,5 @@
-import { queryNotices } from '@/services/api';
+import { queryNotices, password } from '@/services/api';
+import { notification } from 'antd';
 
 export default {
   namespace: 'global',
@@ -64,6 +65,27 @@ export default {
           unreadCount: notices.filter(item => !item.read).length,
         },
       });
+    },
+    *password({ payload }, { call, put }) {
+      const openNotificationWithIcon = type => {
+        notification[type]({
+          message: '修改成功！',
+        });
+      };
+      const data = yield call(password, payload);
+      if (data.status) {
+        openNotificationWithIcon('success');
+        yield put({
+          type: 'updateState',
+          payload: {
+            modalVisible: false,
+          },
+        });
+        yield put({
+          type: 'login/logout',
+          act: 'voluntary',
+        });
+      }
     },
   },
 
