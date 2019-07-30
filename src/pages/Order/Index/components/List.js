@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import router from 'umi/router';
 import { isActionsAllowable } from '@/utils/authority';
 import { recoverSort } from '@/pages/_utils/utils';
@@ -60,22 +60,33 @@ const List = ({ list, loading, pagination, sort, handleChange, onRemove }) => {
         let status;
         switch (text) {
           case 1:
-            status = '待付款';
+            status = <Tag>待付款</Tag>;
             break;
           case 2:
-            status = '待发货';
+            status = <Tag>待发货</Tag>;
             break;
           case 3:
-            status = '已发货';
+            status = <Tag>已发货</Tag>;
             break;
           case 4:
-            status = '已完成';
+            status = <Tag>已完成</Tag>;
             break;
           default:
-            status = '订单有误';
+            status = <Tag>订单有误</Tag>;
             break;
         }
         return status;
+      },
+    },
+    {
+      title: '商品名称',
+      key: 'made_picture',
+      dataIndex: 'made_picture',
+      render: (text, record) => {
+        if (text) {
+          return <Tag color="#108ee9">自定义商品</Tag>;
+        }
+        return <Tag>{record.goods_list[0].goods_name}</Tag>;
       },
     },
     {

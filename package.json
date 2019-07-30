@@ -82,7 +82,7 @@
     "react-dom": "^16.7.0",
     "react-fittext": "^1.0.0",
     "react-media": "^1.9.2",
-    "react-native-cli": "^2.0.1",
+    "react-to-print": "^2.2.1",
     "resize-observer-polyfill": "^1.5.1",
     "umi": "^2.4.4",
     "umi-plugin-react": "^1.7.2",

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Card, Divider, Tag, Button, message } from 'antd';
+import ReactToPrint from 'react-to-print';
 import DescriptionList from '@/components/DescriptionList';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import styles from '../../Goods/Index/index.less';
@@ -78,6 +79,31 @@ class Details extends React.Component {
                 >
                   下载
                 </Button>
+              </Description>
+              <Description term="商品图片下载">
+                <div style={{ display: 'none' }}>
+                  <div
+                    ref={el => {
+                      this.print = el;
+                    }}
+                  >
+                    <img
+                      style={{ width: 440 }}
+                      src={`/api/order/show/picture?order_id=${order_id}&filepath=${
+                        item.made_picture[0][0]
+                      }`}
+                      alt="暂无"
+                    />
+                  </div>
+                </div>
+                <ReactToPrint
+                  trigger={() => (
+                    <Button icon="printer" size="small">
+                      打印
+                    </Button>
+                  )}
+                  content={() => this.print}
+                />
               </Description>
             </DescriptionList>
           ) : null}
