@@ -106,6 +106,12 @@ export default enhancedModelExtend(common, {
     setup({ history, dispatch }) {
       return history.listen(({ pathname, search }) => {
         if (pathname === '/goods/create') {
+          dispatch({
+            type: 'updateState',
+            payload: {
+              item: {},
+            },
+          });
           const payload = parse(search, { ignoreQueryPrefix: true });
           dispatch({
             type: 'fetchDetails',
