@@ -80,7 +80,7 @@ class Details extends React.Component {
                   下载
                 </Button>
               </Description>
-              <Description term="商品图片下载">
+              <Description term="商品图片打印">
                 <div style={{ display: 'none' }}>
                   <div
                     ref={el => {
